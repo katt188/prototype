@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polling Center Officer Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="portal-header">
+            <div class="header-content">
+                <h1>Polling Center Officer Portal</h1>
+                <div class="officer-info">
+                    <span class="officer-name">Officer Rathnayake</span>
+                    <span class="badge-number">Badge: PO-001</span>
+                </div>
+            </div>
+            <div class="polling-center-info">
+                <strong>Current Polling Center:</strong> Colombo Central School
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="portal-main">
+            <!-- Left Panel: Voter Verification -->
+            <section class="left-panel">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Voter Verification Panel</h2>
+                        <p class="verification-note">✓ Always available - check eligibility while kiosk is in use</p>
+                    </div>
+                    <div class="card__body">
+                        <!-- NIC Input Form -->
+                        <form id="nicForm" class="nic-form">
+                            <div class="form-group">
+                                <label for="nicInput" class="form-label">Enter 12-Digit NIC Number</label>
+                                <input 
+                                    type="text" 
+                                    id="nicInput" 
+                                    class="form-control" 
+                                    placeholder="Enter 12-digit NIC number"
+                                    maxlength="12"
+                                    autocomplete="off"
+                                >
+                                <div class="input-feedback" id="nicFeedback"></div>
+                            </div>
+                            <button type="submit" class="btn btn--primary btn--full-width" id="lookupBtn">
+                                <span id="lookupBtnText">Lookup Voter</span>
+                                <div class="loading-spinner" id="loadingSpinner"></div>
+                            </button>
+                        </form>
+
+                        <!-- Voter Details Display -->
+                        <div id="voterDetails" class="voter-details hidden">
+                            <h3>Voter Information</h3>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <label>Full Name:</label>
+                                    <span id="voterName">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Age:</label>
+                                    <span id="voterAge">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>District:</label>
+                                    <span id="voterDistrict">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Assigned Polling Center:</label>
+                                    <span id="voterPollingCenter">-</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Registration Status:</label>
+                                    <span id="registrationStatus">-</span>
+                                </div>
+                            </div>
+
+                            <!-- Eligibility Status -->
+                            <div class="eligibility-section">
+                                <div id="eligibilityStatus" class="eligibility-status">
+                                    <div class="status-indicator" id="statusIndicator">
+                                        <span id="statusText">Checking eligibility...</span>
+                                    </div>
+                                    <div class="status-reason" id="statusReason"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Display -->
+                        <div id="errorDisplay" class="error-display hidden">
+                            <div class="status status--error" id="errorMessage"></div>
+                        </div>
+
+                        <!-- Kiosk Control Buttons -->
+                        <div class="kiosk-controls">
+                            <button 
+                                id="openKioskBtn" 
+                                class="btn btn--primary btn--full-width" 
+                                disabled
+                            >
+                                Open Voting Kiosk
+                            </button>
+                            <button 
+                                id="closeKioskBtn" 
+                                class="btn btn--secondary btn--full-width" 
+                                disabled
+                            >
+                                Close Voting Kiosk
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Kiosk Status -->
+            <section class="right-panel">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Kiosk Status Panel</h2>
+                    </div>
+                    <div class="card__body">
+                        <!-- Current Polling Center Display -->
+                        <div class="center-display">
+                            <label>Current Polling Center:</label>
+                            <div class="center-name">Colombo Central School</div>
+                        </div>
+
+                        <!-- Kiosk Status -->
+                        <div class="kiosk-status">
+                            <div class="status-display">
+                                <label>Kiosk Status:</label>
+                                <div class="status closed" id="kioskStatus">CLOSED</div>
+                            </div>
+                            
+                            <!-- Session Information -->
+                            <div class="session-info" id="sessionInfo">
+                                <div class="session-timer" id="sessionTimer"></div>
+                                <div class="session-voter" id="sessionVoter"></div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Button -->
+                        <div class="emergency-section">
+                            <button id="emergencyBtn" class="btn btn--outline emergency-btn">
+                                ⚠️ Emergency Alert
+                            </button>
+                            <p class="emergency-note">
+                                Use only for technical issues or security concerns
+                            </p>
+                        </div>
+
+                        <!-- Session Controls -->
+                        <div class="session-controls">
+                            <button id="resetSessionBtn" class="btn btn--outline btn--full-width">
+                                Reset Session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Log -->
+                <div class="card audit-log-card">
+                    <div class="card__header">
+                        <h3>Session Activity Log</h3>
+                    </div>
+                    <div class="card__body">
+                        <div id="auditLog" class="audit-log">
+                            <div class="audit-entry">
+                                <span class="timestamp">2025-06-22 13:15:00</span>
+                                <span class="action">Portal initialized - Ready for concurrent operations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demo Instructions -->
+                <div class="card demo-instructions">
+                    <div class="card__header">
+                        <h4>Demo Instructions</h4>
+                    </div>
+                    <div class="card__body">
+                        <div class="instruction-section">
+                            <h5>✅ Eligible Voters (Colombo Central School):</h5>
+                            <p><strong>123456789012</strong> - Saman Perera</p>
+                            <p><strong>234567890123</strong> - Nimal Silva</p>
+                            <p><strong>345678901234</strong> - Kamala Jayawardena</p>
+                            <p><strong>456789012345</strong> - Ruwan Fernando</p>
+                        </div>
+                        
+                        <div class="instruction-section">
+                            <h5>❌ Wrong Polling Center:</h5>
+                            <p><strong>678901234567</strong> - Anil Bandara (Kandy)</p>
+                            <p><strong>789012345678</strong> - Priya Gunawardena (Galle)</p>
+                        </div>
+                        
+                        <div class="instruction-section">
+                            <h5>🚫 Unregistered:</h5>
+                            <p><strong>999999999999</strong> - Not found</p>
+                        </div>
+
+                        <div class="instruction-section">
+                            <h5>🔧 Test Workflow:</h5>
+                            <p>1. Open kiosk for eligible voter</p>
+                            <p>2. Check next voter while kiosk is open</p>
+                            <p>3. Verify all lookups work during session</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
