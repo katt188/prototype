@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electronic Voting Kiosk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="kiosk-container">
+        <!-- Language Selection Screen -->
+        <div id="language-screen" class="screen active">
+            <div class="screen-content">
+                <div class="header">
+                    <h1>Select Your Language / ඔබේ භාෂාව තෝරන්න / உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</h1>
+                </div>
+                <div class="language-buttons">
+                    <button class="btn btn--primary btn--lg language-btn" data-lang="en">
+                        <span class="flag">🇺🇸</span>
+                        <span>English</span>
+                    </button>
+                    <button class="btn btn--primary btn--lg language-btn" data-lang="si">
+                        <span class="flag">🇱🇰</span>
+                        <span>සිංහල</span>
+                    </button>
+                    <button class="btn btn--primary btn--lg language-btn" data-lang="ta">
+                        <span class="flag">🇱🇰</span>
+                        <span>தமிழ்</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voter Authentication Screen -->
+        <div id="auth-screen" class="screen">
+            <div class="screen-content">
+                <div class="header">
+                    <h1 data-translate="voterAuthentication">Voter Authentication</h1>
+                </div>
+                <div class="auth-form">
+                    <div class="form-group">
+                        <label class="form-label" data-translate="enterVoterId">Enter Your Voter ID</label>
+                        <input type="text" class="form-control voter-id-input" placeholder="123456789V" maxlength="12">
+                        <div class="error-message hidden" id="voter-id-error">Please enter a valid voter ID</div>
+                    </div>
+                    <button class="btn btn--primary btn--lg btn--full-width" id="authenticate-btn">
+                        <span data-translate="next">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Voting Instructions Screen -->
+        <div id="instructions-screen" class="screen">
+            <div class="screen-content">
+                <div class="header">
+                    <h1 data-translate="votingInstructions">Voting Instructions</h1>
+                </div>
+                <div class="instructions-content">
+                    <div class="election-type-indicator">
+                        <span class="status status--info" id="election-type-badge">Presidential Election</span>
+                    </div>
+                    <div class="instruction-text">
+                        <p id="instruction-message" data-translate="presidentialInstructions">
+                            Select 3 candidates in order of your preference (1st, 2nd, 3rd choice)
+                        </p>
+                    </div>
+                    <div class="instruction-steps">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <span data-translate="firstChoice">1st Choice</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <span data-translate="secondChoice">2nd Choice</span>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <span data-translate="thirdChoice">3rd Choice</span>
+                        </div>
+                    </div>
+                    <button class="btn btn--primary btn--lg btn--full-width" id="start-voting-btn">
+                        <span data-translate="next">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Party Selection Screen (Parliamentary only) -->
+        <div id="party-screen" class="screen">
+            <div class="screen-content">
+                <div class="header">
+                    <h1 data-translate="selectParty">Select Your Party</h1>
+                </div>
+                <div class="party-grid" id="party-grid">
+                    <!-- Party buttons will be dynamically generated -->
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn btn--outline btn--lg" id="party-back-btn">
+                        <span data-translate="back">Back</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Candidate Selection Screen -->
+        <div id="candidate-screen" class="screen">
+            <div class="screen-content">
+                <div class="header">
+                    <h1 id="candidate-screen-title" data-translate="selectCandidates">Select 3 Candidates (In Order)</h1>
+                    <div class="selected-party-info hidden" id="selected-party-info">
+                        <span class="status status--info" id="selected-party-name"></span>
+                    </div>
+                </div>
+                <div class="selection-progress">
+                    <div class="progress-indicator">
+                        <span class="progress-text">
+                            <span data-translate="selected">Selected</span>: <span id="selection-count">0</span>/3
+                        </span>
+                    </div>
+                </div>
+                <div class="candidate-grid" id="candidate-grid">
+                    <!-- Candidate cards will be dynamically generated -->
+                </div>
+                <div class="selected-candidates" id="selected-candidates">
+                    <h3>Your Selections:</h3>
+                    <div class="selections-list" id="selections-list">
+                        <!-- Selected candidates will appear here -->
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn btn--outline btn--lg" id="candidate-back-btn">
+                        <span data-translate="back">Back</span>
+                    </button>
+                    <button class="btn btn--primary btn--lg disabled" id="proceed-review-btn">
+                        <span data-translate="reviewVote">Review Vote</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Vote Screen -->
+        <div id="review-screen" class="screen">
+            <div class="screen-content">
+                <div class="header">
+                    <h1 data-translate="reviewVote">Review Your Vote</h1>
+                </div>
+                <div class="review-content">
+                    <div class="election-summary">
+                        <div class="election-type">
+                            <span class="status status--info" id="review-election-type">Presidential Election</span>
+                        </div>
+                        <div class="selected-party-review hidden" id="selected-party-review">
+                            <h3>Selected Party:</h3>
+                            <div class="party-info" id="review-party-info"></div>
+                        </div>
+                    </div>
+                    <div class="vote-summary">
+                        <h3>Your Candidate Selections:</h3>
+                        <div class="review-selections" id="review-selections">
+                            <!-- Review selections will be generated here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="navigation-buttons">
+                    <button class="btn btn--outline btn--lg" id="review-back-btn">
+                        <span data-translate="back">Back</span>
+                    </button>
+                    <button class="btn btn--primary btn--lg" id="confirm-vote-btn">
+                        <span data-translate="confirmVote">Confirm Vote</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vote Submitted Screen -->
+        <div id="success-screen" class="screen">
+            <div class="screen-content">
+                <div class="success-content">
+                    <div class="success-icon">✓</div>
+                    <h1 data-translate="voteSubmitted">Vote Submitted Successfully</h1>
+                    <p data-translate="thankYou">Thank you for voting!</p>
+                    <div class="vote-reference">
+                        <p>Reference Number: <span id="vote-reference"></span></p>
+                        <p class="timestamp" id="vote-timestamp"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p>Processing your vote...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
